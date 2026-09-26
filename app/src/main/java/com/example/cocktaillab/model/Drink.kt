@@ -25,7 +25,7 @@ data class DrinkDetail(
     val category: String?,
     @SerializedName("strGlass")
     val glass: String?,
-    @SerializedName("strInstructions")
+    @SerializedName("strInstructions") //strInstructionsES in spanish
     val instructions: String?,
 
     // La API no devuelve una lista de ingredientes: devuelve hasta 15 pares
@@ -93,4 +93,26 @@ data class DrinkListResponse(
 
 data class DrinkDetailResponse(
     val drinks: List<DrinkDetail>?
+)
+
+// Lo que devuelve list.php?c=list: el listado oficial de categorias validas.
+data class CategoryItem(
+    @SerializedName("strCategory")
+    val name: String
+)
+
+// Lo que devuelve list.php?i=list. Ojo: la API reutiliza el campo
+// "strIngredient1" aca tambien (no usa un nombre mas prolijo tipo
+// "strIngredient"), asi que lo mapeamos igual para que Gson lo entienda.
+data class IngredientItem(
+    @SerializedName("strIngredient1")
+    val name: String
+)
+
+data class CategoryListResponse(
+    val drinks: List<CategoryItem>?
+)
+
+data class IngredientListResponse(
+    val drinks: List<IngredientItem>?
 )
