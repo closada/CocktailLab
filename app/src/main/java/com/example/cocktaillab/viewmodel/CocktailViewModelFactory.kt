@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.cocktaillab.repository.CocktailRepository
 
-// Como CocktailViewModel recibe el Repository por constructor (Dependency
-// Injection), el ViewModelProvider por defecto no sabe como construirlo.
-// Esta factory le enseña como hacerlo.
+// Since CocktailViewModel receives the Repository through the constructor
+// (Dependency Injection), the default ViewModelProvider does not know how
+// to create it. This factory tells it how to do so.
 class CocktailViewModelFactory(
     private val repository: CocktailRepository,
     private val application: Application

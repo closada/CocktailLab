@@ -1,7 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.CocktailLab" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/gold_500</item>
+        <item name="colorPrimaryVariant">@color/wine_700</item>
+        <item name="colorOnPrimary">@color/ink_900</item>
+        <item name="colorSecondary">@color/wine_500</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSurface">@color/wine_900</item>
+        <item name="colorOnSurface">@color/cream_50</item>
+        <item name="android:statusBarColor">@color/wine_900</item>
     </style>
 </resources>

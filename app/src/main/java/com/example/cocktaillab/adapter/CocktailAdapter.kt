@@ -9,8 +9,8 @@ import com.example.cocktaillab.databinding.ItemDrinkBinding
 import com.example.cocktaillab.model.DrinkSummary
 import java.net.URL
 
-// Mismo esquema que vimos en clase: ViewBinding por item + una lambda de
-// click en vez de una interfaz de listener.
+// ViewBinding for each item + a click lambda instead of a listener interface.
+
 class CocktailAdapter(
     private var drinks: List<DrinkSummary>,
     private val onItemClick: (DrinkSummary) -> Unit
@@ -43,15 +43,15 @@ class CocktailAdapter(
             binding.root.setOnClickListener { onItemClick(drink) }
         }
 
-        // Descarga manual de la imagen, sin librerias externas (no vimos
-        // Glide/Coil en clase). Se baja en un Thread aparte para no bloquear
-        // la UI y se vuelve al hilo principal con post() para setearla.
-        //
-        // El "tag" evita el problema clasico de RecyclerView: como las vistas
-        // se reciclan, si el usuario scrollea rapido, una descarga vieja y
-        // lenta podria terminar mostrandose sobre el item equivocado. Guardamos
-        // la URL que le corresponde a esta vista y, cuando la descarga termina,
-        // chequeamos que siga siendo la misma antes de mostrarla.
+    // Manually downloads the image without external libraries
+    //  The image is downloaded on a separate thread to avoid
+    // blocking the UI, then post() is used to return to the main thread and set it.
+
+    // The "tag" prevents a common RecyclerView issue: since views are recycled,
+    // if the user scrolls quickly, an old and slow download could finish and be
+    // displayed on the wrong item. We store the URL associated with this view and,
+    // when the download finishes, check that it is still the same before displaying it.
+
         private fun loadThumbnail(imageView: ImageView, url: String?) {
             imageView.tag = url
             imageView.setImageDrawable(null)
@@ -66,8 +66,8 @@ class CocktailAdapter(
                         }
                     }
                 } catch (e: Exception) {
-                    // Si falla la descarga (sin conexion, url rota, etc.)
-                    // simplemente dejamos el ImageView vacio.
+                    // If the download fails (no connection, broken URL, etc.),
+                    // the ImageView is simply left empty.
                 }
             }.start()
         }

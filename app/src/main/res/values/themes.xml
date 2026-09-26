@@ -1,9 +1,29 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.CocktailLab" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/wine_700</item>
+        <item name="colorPrimaryVariant">@color/wine_900</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/gold_500</item>
+        <item name="colorOnSecondary">@color/ink_900</item>
+        <item name="android:colorBackground">@color/cream_50</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/ink_900</item>
+        <item name="android:statusBarColor">@color/wine_900</item>
     </style>
 
     <style name="Theme.CocktailLab" parent="Base.Theme.CocktailLab" />
+
+    <!-- Forma redondeada reutilizable para el thumbnail de la lista y la
+         imagen del detalle (ShapeableImageView). -->
+    <style name="ThumbnailShape" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerSize">14dp</item>
+    </style>
+
+    <style name="DetailImageShape" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomLeft">20dp</item>
+        <item name="cornerSizeBottomRight">20dp</item>
+    </style>
 </resources>

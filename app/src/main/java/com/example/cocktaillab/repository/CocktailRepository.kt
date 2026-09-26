@@ -9,19 +9,18 @@ import com.example.cocktaillab.service.CocktailService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-// Repository Pattern: esta es la unica clase que sabe que existe Retrofit.
-// El ViewModel no conoce la API, solo le pide datos al Repository.
-//
-// Recibe el CocktailService por constructor (Dependency Injection manual)
-// en vez de crearlo el mismo: eso desacopla el Repository de como se arma
-// Retrofit y permite reemplazarlo por un fake en un test.
+
+// Repository Pattern: this is the only class that knows that Retrofit exists.
+// The ViewModel does not know about the API; it only requests data from the Repository.
+// Receives the CocktailService through the constructor (manual Dependency Injection)
+// instead of creating it itself. This decouples the Repository from how Retrofit is configured
 class CocktailRepository(private val service: CocktailService) {
 
     companion object {
         private const val TAG = "CocktailRepository"
         private const val BASE_URL = "https://www.thecocktaildb.com/api/json/v1/1/"
 
-        // Fabrica el Repository "real", armando Retrofit una sola vez aca.
+        // Creates the "real" Repository by setting up Retrofit once here.
         fun create(): CocktailRepository {
             val service = Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -39,7 +38,7 @@ class CocktailRepository(private val service: CocktailService) {
 
         if (!response.isSuccessful) {
             Log.e(TAG, "Error trayendo categorias: ${response.code()}")
-            throw Exception("Error del servidor: ${response.code()}")
+            throw CocktailException.ApiError(response.code())
         }
 
         return response.body()?.drinks ?: emptyList()
@@ -51,7 +50,7 @@ class CocktailRepository(private val service: CocktailService) {
 
         if (!response.isSuccessful) {
             Log.e(TAG, "Error trayendo ingredientes: ${response.code()}")
-            throw Exception("Error del servidor: ${response.code()}")
+            throw CocktailException.ApiError(response.code())
         }
 
         return response.body()?.drinks ?: emptyList()
@@ -63,7 +62,7 @@ class CocktailRepository(private val service: CocktailService) {
 
         if (!response.isSuccessful) {
             Log.e(TAG, "Error buscando por categoria: ${response.code()}")
-            throw Exception("Error del servidor: ${response.code()}")
+            throw CocktailException.ApiError(response.code())
         }
 
         return response.body()?.drinks ?: emptyList()
@@ -75,7 +74,7 @@ class CocktailRepository(private val service: CocktailService) {
 
         if (!response.isSuccessful) {
             Log.e(TAG, "Error buscando por ingrediente: ${response.code()}")
-            throw Exception("Error del servidor: ${response.code()}")
+            throw CocktailException.ApiError(response.code())
         }
 
         return response.body()?.drinks ?: emptyList()
@@ -87,11 +86,12 @@ class CocktailRepository(private val service: CocktailService) {
 
         if (!response.isSuccessful) {
             Log.e(TAG, "Error buscando detalle: ${response.code()}")
-            throw Exception("Error del servidor: ${response.code()}")
+            throw CocktailException.ApiError(response.code())
         }
 
-        // lookup.php siempre devuelve un solo trago dentro de la lista "drinks".
+
+        // lookup.php always returns a single drink inside the "drinks" list.
         return response.body()?.drinks?.firstOrNull()
-            ?: throw Exception("No se encontro el trago con id $id")
+            ?: throw CocktailException.NotFound(id)
     }
 }

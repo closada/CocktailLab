@@ -1,6 +1,15 @@
 <resources>
     <string name="app_name">CocktailLab</string>
+    <string name="app_title">CocktailLab</string>
+    <string name="app_subtitle">Find your next drink</string>
     <string name="drink_image_description">Drink image</string>
     <string name="no_connection_message">No internet connection.</string>
     <string name="drink_thumbnail_description">Drink thumbnail</string>
+    <string name="category_label">Category</string>
+    <string name="ingredient_label">Ingredient</string>
+    <string name="empty_state_message">Pick a category or an ingredient to see drinks.</string>
+    <string name="ingredients_section_title">Ingredients</string>
+    <string name="preparation_section_title">Preparation</string>
+    <string name="back_button_description">Back to the list</string>
+    <string name="back_button_label">Back</string>
 </resources>

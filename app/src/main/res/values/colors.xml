@@ -2,4 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="wine_900">#3A0A1C</color>
+    <color name="wine_700">#7B1E3A</color>
+    <color name="wine_500">#A13454</color>
+    <color name="gold_500">#D4A017</color>
+    <color name="gold_200">#F0D999</color>
+    <color name="cream_50">#FFFBF5</color>
+    <color name="ink_900">#2B2118</color>
 </resources>

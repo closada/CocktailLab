@@ -6,9 +6,8 @@ import android.net.NetworkCapabilities
 
 object NetworkUtils {
 
-    // Chequea si hay conexion activa (wifi, datos moviles o ethernet) antes
-    // de salir a pegarle a la API. Esto es lo que nos permite mostrar
-    // "sin conexion" en vez de un error de red generico y feo.
+    // Checks if there is an active conection (wifi) before
+    // requesting information to the API.
     fun isConnected(context: Context): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager

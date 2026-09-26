@@ -2,8 +2,9 @@ package com.example.cocktaillab.model
 
 import com.google.gson.annotations.SerializedName
 
-// Lo que devuelve filter.php (por ingrediente o categoria): version resumida,
-// justo lo necesario para pintar el RecyclerView de la pantalla principal.
+
+// What filter.php returns (by ingredient or category): a simplified version
+// with only the data needed to display the RecyclerView on the main screen.
 data class DrinkSummary(
     @SerializedName("idDrink")
     val id: String,
@@ -13,7 +14,7 @@ data class DrinkSummary(
     val thumbnail: String?
 )
 
-// Lo que devuelve lookup.php?i={id}: el detalle completo del trago.
+// What lookup.php?i={id} returns: the complete drink details.
 data class DrinkDetail(
     @SerializedName("idDrink")
     val id: String,
@@ -28,9 +29,10 @@ data class DrinkDetail(
     @SerializedName("strInstructions") //strInstructionsES in spanish
     val instructions: String?,
 
-    // La API no devuelve una lista de ingredientes: devuelve hasta 15 pares
-    // sueltos (strIngredient1..15 / strMeasure1..15). Los mapeamos tal cual
-    // y despues los combinamos nosotros con getIngredients().
+    // The API does not return a list of ingredients: it returns up to 15 separate
+    // pairs (strIngredient1..15 / strMeasure1..15). We map them as they are
+    // and then combine them ourselves using getIngredients().
+
     @SerializedName("strIngredient1") val ingredient1: String?,
     @SerializedName("strIngredient2") val ingredient2: String?,
     @SerializedName("strIngredient3") val ingredient3: String?,
@@ -64,9 +66,9 @@ data class DrinkDetail(
     @SerializedName("strMeasure15") val measure15: String?
 ) {
 
-    // Arma la lista real de "ingrediente + cantidad" ignorando los campos vacios.
-    // La usamos en el Fragment de detalle para no tener que repetir este if
-    // 15 veces en la vista.
+    // Builds the actual list of "ingredient + amount", ignoring empty fields.
+    // We use it in the detail Fragment to avoid repeating this if statement
+    // 15 times in the view.
     fun getIngredients(): List<Pair<String, String?>> {
         val ingredients = listOf(
             ingredient1, ingredient2, ingredient3, ingredient4, ingredient5,
@@ -85,8 +87,9 @@ data class DrinkDetail(
     }
 }
 
-// Wrappers: la API siempre envuelve el resultado en un objeto "drinks".
-// Puede venir null si no encuentra nada (no tira error, devuelve drinks: null).
+// Wrappers: the API always wraps the result in a "drinks" object.
+// It can be null if nothing is found (it does not throw an error,
+// it returns drinks: null).
 data class DrinkListResponse(
     val drinks: List<DrinkSummary>?
 )
@@ -95,15 +98,15 @@ data class DrinkDetailResponse(
     val drinks: List<DrinkDetail>?
 )
 
-// Lo que devuelve list.php?c=list: el listado oficial de categorias validas.
+// What list.php?c=list returns: the official list of valid categories.
 data class CategoryItem(
     @SerializedName("strCategory")
     val name: String
 )
 
-// Lo que devuelve list.php?i=list. Ojo: la API reutiliza el campo
-// "strIngredient1" aca tambien (no usa un nombre mas prolijo tipo
-// "strIngredient"), asi que lo mapeamos igual para que Gson lo entienda.
+// What list.php?i=list returns. Note: the API also uses the
+// "strIngredient1" field here (instead of a cleaner name such as
+// "strIngredient"), so we map it the same way for Gson to understand it.
 data class IngredientItem(
     @SerializedName("strIngredient1")
     val name: String

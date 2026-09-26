@@ -3,7 +3,6 @@ package com.example.cocktaillab
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -22,12 +21,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: CocktailViewModel
     private lateinit var adapter: CocktailAdapter
-
-    // Android dispara onItemSelected una vez "gratis" apenas seteas el
-    // adapter del Spinner, antes de que el usuario toque nada. Estos flags
-    // evitan que esa selección fantasma dispare una búsqueda al abrir la app.
-    private var categorySpinnerReady = false
-    private var ingredientSpinnerReady = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,14 +48,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupObservers() {
-        viewModel.categories.observe(this) { categories -> setupCategorySpinner(categories) }
-        viewModel.ingredients.observe(this) { ingredients -> setupIngredientSpinner(ingredients) }
+        viewModel.categories.observe(this) { categories -> setupCategoryDropdown(categories) }
+        viewModel.ingredients.observe(this) { ingredients -> setupIngredientDropdown(ingredients) }
 
         viewModel.uiState.observe(this) { state ->
             when (state) {
                 is CocktailUIState.Idle -> {
                     binding.progressBar.visibility = View.GONE
-                    binding.tvMessage.visibility = View.GONE
+                    binding.tvMessage.text = getString(R.string.empty_state_message)
+                    binding.tvMessage.visibility = View.VISIBLE
                 }
 
                 is CocktailUIState.Loading -> {
@@ -87,47 +81,34 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 is CocktailUIState.DetailSuccess -> {
-                    // Este estado no se usa en esta pantalla, solo en DetailActivity.
+                    // This state is not used on this screen, only in DetailActivity.
                 }
             }
         }
     }
 
-    private fun setupCategorySpinner(categories: List<CategoryItem>) {
+    // Unlike the classic Spinner, MaterialAutoCompleteTextView does not
+    // trigger any "ghost" selection when setting the adapter: the field
+    // starts empty and displays the hint ("Category"/"Ingredient") until
+    // the user selects something. Therefore, no flag is needed to ignore
+    // the first selection, as we did with the Spinner.
+    private fun setupCategoryDropdown(categories: List<CategoryItem>) {
         val names = categories.map { it.name }
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, names)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
-        binding.spinnerCategories.adapter = adapter
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, names)
+        binding.actCategory.setAdapter(adapter)
 
-        binding.spinnerCategories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (!categorySpinnerReady) {
-                    categorySpinnerReady = true
-                    return
-                }
-                viewModel.searchByCategory(names[position])
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        binding.actCategory.setOnItemClickListener { _, _, position, _ ->
+            viewModel.searchByCategory(names[position])
         }
     }
 
-    private fun setupIngredientSpinner(ingredients: List<IngredientItem>) {
+    private fun setupIngredientDropdown(ingredients: List<IngredientItem>) {
         val names = ingredients.map { it.name }
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, names)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item)
-        binding.spinnerIngredients.adapter = adapter
+        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, names)
+        binding.actIngredient.setAdapter(adapter)
 
-        binding.spinnerIngredients.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (!ingredientSpinnerReady) {
-                    ingredientSpinnerReady = true
-                    return
-                }
-                viewModel.searchByIngredient(names[position])
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        binding.actIngredient.setOnItemClickListener { _, _, position, _ ->
+            viewModel.searchByIngredient(names[position])
         }
     }
 

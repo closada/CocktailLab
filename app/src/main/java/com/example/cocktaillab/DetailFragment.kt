@@ -57,6 +57,15 @@ class DetailFragment : Fragment() {
 
         setupObservers()
 
+        /*
+        With 2 Activities, the system "back" button already closes this
+        screen. This button is a visible shortcut in the UI, required
+        by the assignment, that does exactly the same thing: finish().
+        */
+        binding.buttonBack.setOnClickListener {
+            requireActivity().finish()
+        }
+
         val drinkId = arguments?.getString(ARG_DRINK_ID)
 
         if (drinkId.isNullOrBlank()) {
@@ -111,8 +120,7 @@ class DetailFragment : Fragment() {
         binding.tvGlass.text =
             "Glass: ${drink.glass ?: "Not available"}"
 
-        binding.tvInstructions.text =
-            drink.instructions ?: "Preparation instructions not available."
+        binding.tvInstructions.text = formatInstructions(drink.instructions)
 
         val ingredientsText = drink.getIngredients()
             .joinToString("\n") { (ingredient, measure) ->
@@ -130,7 +138,31 @@ class DetailFragment : Fragment() {
                 ingredientsText
             }
 
-        loadImage(binding.ivDrink, drink.thumbnail)
+        // TheCocktailDB allows requesting a larger version of the same image by adding
+        // "/large" to the thumbnail URL (the default image is small and intended
+        // for the list, not for the detail screen).
+        loadImage(binding.ivDrink, highResUrl(drink.thumbnail))
+    }
+
+    // Converts the "strInstructions" paragraph into numbered steps.
+    // The API does not separate the steps in a structured way, so we
+    // split them by sentences (". ") as a reasonable approximation.
+    private fun formatInstructions(raw: String?): String {
+        if (raw.isNullOrBlank()) return "Preparation instructions not available."
+
+        val steps = raw.split(". ")
+            .map { it.trim().trimEnd('.') }
+            .filter { it.isNotBlank() }
+
+        if (steps.isEmpty()) return raw
+
+        return steps.mapIndexed { index, step -> "${index + 1}. $step." }
+            .joinToString("\n")
+    }
+
+    private fun highResUrl(thumbnail: String?): String? {
+        if (thumbnail.isNullOrBlank()) return null
+        return "$thumbnail/large"
     }
 
     private fun loadImage(imageView: ImageView, url: String?) {
